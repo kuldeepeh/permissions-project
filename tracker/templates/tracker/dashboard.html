@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Capture Dashboard</title>
+    <link rel="stylesheet" href="{% static 'tracker/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Captured Events</h1>
+        <p><a href="{% url 'tracker:index' %}">&larr; Back to demo</a></p>
+
+        <table class="events-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                    <th>IP</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in events %}
+                <tr>
+                    <td>{{ e.id }}</td>
+                    <td>{{ e.get_permission_type_display }}</td>
+                    <td class="status-{{ e.status }}">{{ e.get_status_display }}</td>
+                    <td>{{ e.timestamp }}</td>
+                    <td>{{ e.ip_address }}</td>
+                    <td>
+                        {% if e.photo %}
+                            <a href="{{ e.photo.url }}" target="_blank">photo</a>
+                        {% elif e.audio %}
+                            <a href="{{ e.audio.url }}" target="_blank">audio</a>
+                        {% elif e.latitude %}
+                            {{ e.latitude|floatformat:5 }}, {{ e.longitude|floatformat:5 }}
+                            (±{{ e.location_accuracy_m|floatformat:0 }}m)
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6">No events yet. Go try the buttons on the demo page.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

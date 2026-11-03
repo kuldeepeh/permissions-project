@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Browser Permission Capture Demo</title>
+    <link rel="stylesheet" href="{% static 'tracker/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Browser Permission Capture — Demo</h1>
+        <p class="subtitle">
+            A mini cybersecurity-awareness project. Each button below triggers a
+            <strong>real, native browser permission prompt</strong>. Nothing happens
+            silently — your browser always asks first, and the action it performs is
+            shown next to the button. This demonstrates what a website can legitimately
+            access once a user clicks "Allow", and why permission prompts deserve
+            attention.
+        </p>
+
+        <div class="card-grid">
+            <div class="perm-card">
+                <h2>📷 Camera</h2>
+                <p>Requests camera access and captures a single still frame.</p>
+                <button id="btn-camera">Request Camera Access</button>
+                <video id="camera-preview" autoplay playsinline style="display:none;"></video>
+                <canvas id="camera-canvas" style="display:none;"></canvas>
+                <p class="status" id="status-camera"></p>
+            </div>
+
+            <div class="perm-card">
+                <h2>🎤 Microphone</h2>
+                <p>Requests mic access and records a short (3s) audio clip.</p>
+                <button id="btn-mic">Request Microphone Access</button>
+                <p class="status" id="status-mic"></p>
+            </div>
+
+            <div class="perm-card">
+                <h2>📍 Location</h2>
+                <p>Requests geolocation and logs latitude/longitude/accuracy.</p>
+                <button id="btn-location">Request Location Access</button>
+                <p class="status" id="status-location"></p>
+            </div>
+        </div>
+
+        <p class="footer-note">
+            Every request, grant, and denial is logged on the backend.
+            View everything captured so far on the <a href="{% url 'tracker:dashboard' %}">dashboard</a>.
+        </p>
+    </div>
+
+    <script>
+        const CAPTURE_ENDPOINT = "{% url 'tracker:capture_event' %}";
+        const CSRF_TOKEN = "{{ csrf_token }}";
+    </script>
+    <script src="{% static 'tracker/js/capture.js' %}"></script>
+</body>
+</html>
